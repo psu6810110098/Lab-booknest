@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BookCategoryModule } from './book-category/book-category.module';
 
@@ -13,6 +12,7 @@ import { BookCategoryModule } from './book-category/book-category.module';
       password: 'password123',
       database: 'bookstore_dev',
       entities: [], 
+      autoLoadEntities: true, 
       synchronize: true, 
     }),
     BookCategoryModule,

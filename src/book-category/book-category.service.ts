@@ -12,6 +12,18 @@ export class BookCategoryService {
     @InjectRepository(BookCategory)
     private repo: Repository<BookCategory>,
   ) {}
+  
+  async onModuleInit() {
+    const count = await this.repo.count();
+    if (count === 0) {
+        console.log('Seeding Book Categories...');
+        await this.repo.save([
+           { name: 'Fiction', description: 'Stories and novels' },
+           { name: 'Technology', description: 'Computers and engineering' },
+           { name: 'History', description: 'Past events' }
+        ]);
+    }
+}
 
   create(createBookCategoryDto: CreateBookCategoryDto) {
     return 'This action adds a new bookCategory';
@@ -32,15 +44,5 @@ export class BookCategoryService {
   remove(id: number) {
     return `This action removes a #${id} bookCategory`;
   }
-  async onModuleInit() {
-    const count = await this.repo.count();
-    if (count === 0) {
-        console.log('Seeding Book Categories...');
-        await this.repo.save([
-           { name: 'Fiction', description: 'Stories and novels' },
-           { name: 'Technology', description: 'Computers and engineering' },
-           { name: 'History', description: 'Past events' }
-        ]);
-    }
-}
+  
 }
