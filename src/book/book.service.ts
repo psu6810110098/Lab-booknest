@@ -1,34 +1,54 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
+import { Book } from './entities/book.entity';
 
 @Injectable()
 export class BookService {
-  bookRepository: any;
- async incrementLikes(id: string) {
-    const book = await this.findOne(+id);
-    book.likeCount += 1;
+  // 1. Inject Repository ให้ถูกต้อง
+  constructor(
+    @InjectRepository(Book)
+    private bookRepository: Repository<Book>,
+  ) {}
+
+  async create(createBookDto: CreateBookDto) {
+    // บันทึกข้อมูลลง Database
+    const book = this.bookRepository.create(createBookDto);
     return this.bookRepository.save(book);
-}
-
-
-  create(createBookDto: CreateBookDto) {
-    return 'This action adds a new book';
   }
 
   findAll() {
-    return `This action returns all book`;
+    // ดึงข้อมูลพร้อม relations
+    return this.bookRepository.find({ relations: ['category'] });
   }
 
-  findOne(id: number) {
-    return { id, likeCount: 0 };
+  // เปลี่ยน id: number เป็น id: string
+  async findOne(id: string) {
+    const book = await this.bookRepository.findOne({
+      where: { id },
+      relations: ['category'],
+    });
+    if (!book) throw new NotFoundException();
+    return book;
   }
 
-  update(id: number, updateBookDto: UpdateBookDto) {
-    return `This action updates a #${id} book`;
+  async update(id: string, updateBookDto: UpdateBookDto) {
+    const book = await this.findOne(id);
+    this.bookRepository.merge(book, updateBookDto);
+    return this.bookRepository.save(book);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} book`;
+  async remove(id: string) {
+    const book = await this.findOne(id);
+    return this.bookRepository.remove(book);
+  }
+
+  async incrementLikes(id: string) {
+    // เรียก findOne ที่แก้เป็น string แล้ว
+    const book = await this.findOne(id);
+    book.likeCount += 1;
+    return this.bookRepository.save(book);
   }
 }

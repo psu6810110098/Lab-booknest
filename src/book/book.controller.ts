@@ -18,22 +18,22 @@ export class BookController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.bookService.findOne(+id);
+  findOne(@Param('id') id: string) { // ลบ + ออก
+    return this.bookService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto) {
-    return this.bookService.update(+id, updateBookDto);
+  update(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto) { // ลบ + ออก
+    return this.bookService.update(id, updateBookDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.bookService.remove(+id);
+  remove(@Param('id') id: string) { // ลบ + ออก
+    return this.bookService.remove(id);
   }
-  @Patch(':id/like')
-async likeBook(@Param('id') id: string) {
-  return this.bookService.incrementLikes(id);
-}
 
+  @Patch(':id/like')
+  async likeBook(@Param('id') id: string) {
+    return this.bookService.incrementLikes(id);
+  }
 }
