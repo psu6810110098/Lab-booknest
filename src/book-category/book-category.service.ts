@@ -6,7 +6,6 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
-
 export class BookCategoryService {
   constructor(
     @InjectRepository(BookCategory)
@@ -23,14 +22,14 @@ export class BookCategoryService {
            { name: 'History', description: 'Past events' }
         ]);
     }
-}
+  }
 
   create(createBookCategoryDto: CreateBookCategoryDto) {
     return 'This action adds a new bookCategory';
   }
 
   findAll() {
-    return `This action returns all bookCategory`;
+    return this.repo.find();
   }
 
   findOne(id: number) {
@@ -44,5 +43,4 @@ export class BookCategoryService {
   remove(id: number) {
     return `This action removes a #${id} bookCategory`;
   }
-  
 }
