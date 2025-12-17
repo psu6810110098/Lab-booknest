@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { BookCategoryModule } from './book-category/book-category.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       entities: [], 
       synchronize: true, 
     }),
+    BookCategoryModule,
   ],
 })
 export class AppModule {}
