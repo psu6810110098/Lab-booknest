@@ -1,3 +1,5 @@
+// src/auth/auth.service.ts
+
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
@@ -9,6 +11,20 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
   ) {}
+
+
+    // [เพิ่มฟังก์ชันนี้] เพื่อรองรับการ Register
+  async signup(email: string, pass: string) {
+
+
+    // 2. เรียก UsersService ให้สร้าง User (Default Role เป็น 'user')
+    // ต้องมั่นใจว่า UsersService ของนายมีฟังก์ชัน create ที่รับ object นี้
+    return this.usersService.create({
+      email,
+      password: pass,
+      role: 'user', 
+    } as any);
+  }
 
   // ตรวจสอบ Email และ Password
   async validateUser(email: string, pass: string): Promise<any> {

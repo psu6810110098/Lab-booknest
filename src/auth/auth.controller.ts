@@ -1,3 +1,5 @@
+// src/auth/auth.controller.ts
+
 import { Controller, Post, Body, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 
@@ -10,6 +12,13 @@ class LoginDto {
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
+
+@Post('signup') 
+  async signup(@Body() body: LoginDto) {
+    // ส่งไปให้ AuthService จัดการสร้าง User (ต้องมั่นใจว่าใน Service มีฟังก์ชัน signup นะครับ)
+    return this.authService.signup(body.email, body.password);
+  }
+
 
   @Post('login')
   async login(@Body() body: LoginDto) {
