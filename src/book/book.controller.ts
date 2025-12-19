@@ -32,7 +32,7 @@ export class BookController {
   update(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto, @CurrentUser() user: any) {
     if (user.role !== 'admin') throw new ForbiddenException('Admin only');
     return this.bookService.update(id, updateBookDto);
-  }
+  } 
 
   @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
