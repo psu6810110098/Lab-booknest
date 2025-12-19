@@ -1,10 +1,12 @@
+//src/book/book.service.ts
+
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { Book } from './entities/book.entity';
-
+import { User } from '../users/entities/user.entity';
 @Injectable()
 export class BookService {
   // 1. Inject Repository ให้ถูกต้อง
@@ -51,4 +53,33 @@ export class BookService {
     book.likeCount += 1;
     return this.bookRepository.save(book);
   }
+
+  async toggleLike(id: string, userId: Number) {
+    // ต้องดึง likedBy มาด้วย เพื่อเช็คว่าใครเคยกด Like บ้าง
+    const book = await this.bookRepository.findOne({
+      where: { id },
+      relations: ['likedBy'], 
+    });
+
+    if (!book) throw new NotFoundException();
+
+    // เช็คว่า user คนนี้เคย like หรือยัง
+    const isLiked = book.likedBy.some((u) => u.id === userId);
+
+    if (isLiked) {
+      // ถ้าเคย -> เอาออก
+      book.likedBy = book.likedBy.filter((u) => u.id !== userId);
+    } else {
+      // ถ้ายัง -> เพิ่มเข้า (Cast Type หลอกว่าเป็น User เพื่อประหยัด Query)
+      book.likedBy.push({ id: userId } as User);
+    }
+
+    const savedBook = await this.bookRepository.save(book);
+    
+    return {
+      message: isLiked ? 'Unliked' : 'Liked',
+      likeCount: savedBook.likedBy.length,
+    };
+  }
+
 }

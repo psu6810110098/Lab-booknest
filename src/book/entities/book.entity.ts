@@ -1,5 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
 import { BookCategory } from '../../book-category/entities/book-category.entity';
+import { User } from '../../users/entities/user.entity';
+
 
 @Entity()
 export class Book {
@@ -23,4 +25,9 @@ export class Book {
 
   @Column({ nullable: true })
   categoryId: string; 
+
+  @ManyToMany(() => User, (user) => user.likedBooks)
+  @JoinTable()
+  likedBy: User[];
+  
 }
