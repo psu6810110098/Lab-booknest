@@ -7,14 +7,14 @@ import { ConfigService } from '@nestjs/config';
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(configService: ConfigService) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // รับ Token จาก Header Authorization
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: configService.get<string>('JWT_SECRET'),
+      // FIX: Use getOrThrow to ensure the value is a string (not undefined)
+      secretOrKey: configService.getOrThrow<string>('JWT_SECRET'),
     });
   }
 
   async validate(payload: any) {
-    // ค่าที่ return ตรงนี้จะถูกใส่เข้าไปใน request.user อัตโนมัติ
     return { userId: payload.sub, email: payload.username, role: payload.role };
   }
 }
