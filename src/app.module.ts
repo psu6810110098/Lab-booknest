@@ -4,6 +4,7 @@
   import { BookModule } from './book/book.module';
   import { ConfigModule, ConfigService } from '@nestjs/config';
   import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
   @Module({
     imports: [
@@ -25,11 +26,12 @@
           autoLoadEntities: true, 
           synchronize: true, 
         }),
-        inject: [ConfigService], // บอก NestJS ว่าต้องการ Inject ConfigService
+        inject: [ConfigService], 
       }),
       BookCategoryModule,
       BookModule,
       UsersModule,
+      AuthModule,
     ],
   })
   export class AppModule {}
