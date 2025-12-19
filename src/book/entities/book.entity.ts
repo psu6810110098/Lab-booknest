@@ -18,8 +18,7 @@ export class Book {
   @Column({ default: 0 })
   likeCount: number;
 
-  
-  @ManyToOne(() => BookCategory, (category) => category.id)
+  @ManyToOne(() => BookCategory) 
   category: BookCategory;
 
   @Column({ nullable: true })
