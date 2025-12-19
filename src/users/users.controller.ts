@@ -1,7 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+// src/users/users.controller.ts
+
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common'; // [1] เพิ่ม UseGuards
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { AuthGuard } from '@nestjs/passport'; // [2] เพิ่ม AuthGuard
 
 @Controller('users')
 export class UsersController {
@@ -12,6 +15,8 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
+  // [3] แปะยันต์กันผีตรงนี้! ใครไม่มี Token ห้ามเข้า
+  @UseGuards(AuthGuard('jwt')) 
   @Get()
   findAll() {
     return this.usersService.findAll();

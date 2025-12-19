@@ -6,6 +6,7 @@ import { BookCategoryModule } from './book-category/book-category.module';
 import { BookModule } from './book/book.module';
 import { ConfigModule, ConfigService } from '@nestjs/config'; // Import ConfigService
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 
 @Module({
@@ -32,7 +33,7 @@ import { UsersModule } from './users/users.module';
         synchronize: true,
       }),
       inject: [ConfigService],      // Inject ConfigService เข้ามาใน Factory
-    }), UsersModule,
+    }), UsersModule, AuthModule, BookCategoryModule, BookModule,
   ],
 })
 export class AppModule {}
